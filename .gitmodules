@@ -1,0 +1,6 @@
+[submodule "contracts"]
+	path = contracts
+	url = ../PlasmaContract.git
+[submodule "lib"]
+	path = lib
+	url = ../PlasmaTransactionJS.git

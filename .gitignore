@@ -1,0 +1,13 @@
+node_modules
+node_modules_container
+.idea
+*.iml
+/build
+.env
+.vscode
+testScripts/blocks
+db
+blockstorage/blocks/*
+!blockstorage/blocks/.keep
+lib_bak
+contracts_bak

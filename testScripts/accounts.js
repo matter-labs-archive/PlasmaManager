@@ -1,0 +1,22 @@
+module.exports = {
+    allAccounts : ["0x0f055084f8d3f431459e4f13fd873ef898b7b59d",
+    "0x22f87e60ea19d9c3800e7408b32ac49203e83cf3",
+    "0x0da48fa4d019e9bfa9ead77847f4b047a07e9558",
+    "0xcef85dd49976e74cea29287013add9c4236c0bee",
+    "0x403eb872a2fe0fa5fe20005138ce9dc72f5bdc66",
+    "0x9a540f1c6217a93b1acf9cdcb29f673a6aa60a85",
+    "0xb260666fd80ff01fc992cc7fccfa435effa24382",
+    "0x6b6c7d7ac57f319096176cd6e610b16884d25d58",
+    "0x1f9b658872911039e9e841eee0b1ccd9c643986c",
+    "0x9ed7eec413dc3c57348adbd3a1dcd1ce0c2f8674"],
+    allPrivateKeys : [Buffer.from('400c2006201de94b3990b25a8bf2be3ace72963bf9368022efea1bf6ead0029f', 'hex'),
+    Buffer.from('8dc2cb60f6cb5a990cbb93742bfeb8c68f3879c6a9dfc33c4be7ddd8ea213f33', 'hex'),
+    Buffer.from('7e1155ad8c63adcfe705ba96c590681ba227ab0c44523e9e4dd11f6436f673b0', 'hex'),
+    Buffer.from('e09cacc03f2f410bf398f7121718199bd6e1db977eebde56b8ae128c313a8979', 'hex'),
+    Buffer.from('b24845faba5cfe09a08041f312294d22f22178b062670568572fb225e4040351', 'hex'),
+    Buffer.from('67b60d63348652b4f7cd767174141655beae0c16ce9fedbcd5d5b5f8b5761e0b', 'hex'),
+    Buffer.from('6d2c1b601d6266c521a99cb4fed0e4c363565cf2ae9d69d1e51df5a8a81cc56b', 'hex'),
+    Buffer.from('430ece59a853d48cb1fbea2c0411c1672ebe67d482f359cc0fdedeaa2b49e602', 'hex'),
+    Buffer.from('0e295f31155f31aa996d2a1fceb6decbda250f52aa360236ed19639a797c343e', 'hex'),
+    Buffer.from('e25c87e09a7db583bf41d7138a0c81db242753f9975cd998e6842af17f715cc3', 'hex')]
+}

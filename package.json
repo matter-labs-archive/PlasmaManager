@@ -1,0 +1,39 @@
+{
+  "name": "block-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "challengeSender": "node challengeSender.js",
+    "eventMonitor": "node eventMonitor.js",
+    "uploader": "node blockUploader.js",
+    "monitor": "node blockMonitor.js",
+    "blockWriter": "node blockWriter.js",
+    "proofSupplier": "node proofSupplier.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.203.0",
+    "dotenv": "^5.0.1",
+    "ethereumjs-util": "^5.2.0",
+    "is-buffer": "^2.0.2",
+    "js-sha3": "^0.7.0",
+    "jsonschema": "^1.2.4",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
+    "rsmq": "^0.8.3",
+    "rsmq-promise": "^1.0.1",
+    "truffle": "^4.1.8",
+    "truffle-contract": "^3.0.5",
+    "truffle-test-utils": "^0.1.0",
+    "web3": "^1.0.0-beta.34",
+    "redis": "latest"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint": "^4.19.1"
+  }
+}
