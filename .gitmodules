@@ -1,6 +1,6 @@
-[submodule "contracts"]
-	path = contracts
-	url = ../PlasmaContract.git
 [submodule "lib"]
 	path = lib
-	url = https://github.com/matterinc/PlasmaTransactionJS.git
+	url = git://github.com/matterinc/PlasmaTransactionJS.git
+[submodule "contracts"]
+	path = contracts
+	url = https://github.com/matterinc/PlasmaContract.git
