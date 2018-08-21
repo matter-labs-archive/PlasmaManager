@@ -3,4 +3,4 @@
 	url = ../PlasmaContract.git
 [submodule "lib"]
 	path = lib
-	url = ../PlasmaTransactionJS.git
+	url = https://github.com/matterinc/PlasmaTransactionJS.git
