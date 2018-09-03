@@ -47,8 +47,6 @@ const ONE = new BN(1);
 const divisor = ONE.ushln(128);
 
 const getBlock = storage.getBlock;
-// const {getBlock} = require("./testScripts/getBlock")
-
 
 function main() {
     app.post('/sendExitChallenge', async function(req, res) {

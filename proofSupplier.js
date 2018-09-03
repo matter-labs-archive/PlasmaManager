@@ -1,8 +1,6 @@
 const config = require('./config');
 const storage = require('./blockstorage/digitalOceanStorage');
 const ethUtil = require("ethereumjs-util");
-const rp = require("request-promise-native");
-const assert = require('assert');
 const Web3 = require("web3");
 const BN = Web3.utils.BN;
 
@@ -18,8 +16,6 @@ if (config.verbose) {
       });
 }
 
-const {PlasmaTransactionWithNumberAndSignature} = require('./lib/Tx/RLPtxWithNumberAndSignature');
-const {PlasmaTransactionWithSignature} = require('./lib/Tx/RLPtxWithSignature');
 const Block = require("./lib/Block/RLPblock");
 
 const requestSchema =
@@ -27,15 +23,10 @@ const requestSchema =
     "blockNumber" : {"type": "string", "minLength": 1, "maxLength": 64},
     "txNumber" : {"type": "string", "minLength": 1, "maxLength": 64},
     "outputNumber" : {"type": "string", "minLength": 1, "maxLength": 64},
-    "required": ["blockNumber", "txNumber", "outputNumber"]
+    "required": ["blockNumber", "txNumber"]
 }
 
-const ONE = new BN(1);
-const divisor = ONE.ushln(128);
-
 const getBlock = storage.getBlock;
-// const {getBlock} = require("./testScripts/getBlock")
-
 
 function main() {
     app.post('/getProof', async function(req, res) {
@@ -45,16 +36,15 @@ function main() {
             }
             const blockNumber = Web3.utils.toBN(req.body.blockNumber)
             const txNumber = Web3.utils.toBN(req.body.txNumber);
-            const outputNumbber = Web3.utils.toBN(req.body.outputNumber);
             const blockBuffer = await getBlock(req.body.blockNumber);
             const block = new Block(blockBuffer);
             const txNumberInt = txNumber.toNumber();
-            const outputNumberInt = outputNumbber.toNumber();
-            assert(txNumberInt < block.transactions.length);
-            const tx = block.transactions[txNumberInt];
-            assert(outputNumberInt < tx.signedTransaction.transaction.outputs.length);
+            const proofData = block.getProofForTransactionByNumber(txNumberInt);
+            if (proofData === null) {
+                return res.json({error: true})
+            }
+            const {tx, proof} = proofData;
             const serializedTX = ethUtil.bufferToHex(tx.serialize());
-            const proof = Buffer.concat(block.merkleTree.getProof(txNumberInt, true));
             return res.json({error: false, serializedTX, proof: ethUtil.bufferToHex(proof)})
         }
         catch(error) {

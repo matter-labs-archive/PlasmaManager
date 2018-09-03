@@ -21,6 +21,7 @@ module.exports = {
 
 	assemblerEndpoint: env.ASSEMBLER_ENDPOINT || "assembler",
 	writerEndpoint: env.WRITER_ENDPOINT || "blockwriter",
+	processorEndpoint: env.EVENTPROCESSOR_ENDPOINT || "eventprocessor",
 	fromAddress: env.ETH_FROM,
 	ethNodeAddress: env.ETH_NODE || 'http://localhost:8545',
 	blockSenderKey: env.ETH_KEY,
