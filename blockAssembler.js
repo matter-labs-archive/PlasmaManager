@@ -8,6 +8,8 @@ if (config.debug) {
 const {getBlockHash} = require("./functions/getBlockHash");
 const {assembleBlock} = require("./functions/assembleBlock");
 const assemblerEndpoint = config.assemblerEndpoint;
+const assemblyInterval = config.blockAssemblyInterval;
+
 async function main() {
 	try {
 		let lastBlock = await storage.getLastUploadedBlockNumber();
@@ -16,17 +18,19 @@ async function main() {
 		await storage.storeBlock(newBlock);
 	}
 	catch (err) {
+		// setTimeout(main, 1000)
+		// return
 		console.log(err);
 	}
-	// todo check block overflow while waiting
-	setTimeout(main, config.interval);
+	// TODO may be check for block overflow while waiting
+	setTimeout(main, assemblyInterval);
 }
 
 main().catch(err => { console.log(err); process.exit(1); });
 
 // async function checkBlockOverflow(currentBlock) {
 // 	const options = {
-// 		uri: `http://${config.assemblerEndpoint}/crrentCounter`,
+// 		uri: `http://${config.assemblerEndpoint}/currentCounter`,
 // 		json: true 
 // 	};
 // 	let result = await rp(options);

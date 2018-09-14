@@ -11,4 +11,5 @@ if (env.NODE_ENV !== 'production') {
 module.exports = {
 	connectionString: env.STORAGE_CONNECTION_STRING,
 	storageBucket: env.STORAGE_BUCKET || "stage",
+	localStorageDirName: env.LOCAL_STORAGE_DIR
 };

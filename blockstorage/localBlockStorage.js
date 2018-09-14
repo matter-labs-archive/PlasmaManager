@@ -1,10 +1,22 @@
 const fs = require("fs")
+const config = require("./blockstorageConfig");
+
+function getBlockDirectory() {
+    if (config.localStorageDirName === null ||
+        config.localStorageDirName === undefined || 
+        config.localStorageDirName === "") {
+            return __dirname + "/blocks/"
+    }
+    return config.localStorageDirName
+}
+
 var lastBlock = 0
 async function getBlock(blockNumber) {
     if (typeof blockNumber.toString() === 'function') {
         blockNumber = blockNumber.toString(10);
     }
-    const blockBuffer = fs.readFileSync(__dirname + "/blocks/"+blockNumber)
+    const blockDirectory = getBlockDirectory()
+    const blockBuffer = fs.readFileSync(blockDirectory + blockNumber)
     return blockBuffer
 }
 
@@ -20,7 +32,8 @@ async function storeBlock(block) {
         throw "Block " + blockNumber + " is out of sequence. Last block is " + manifest.lastBlock;
     }
     lastBlock++;
-    fs.writeFileSync(__dirname + "/blocks/"+blockNumber, block);
+    const blockDirectory = getBlockDirectory()
+    fs.writeFileSync(blockDirectory + blockNumber, block);
     console.log("uploaded block " + blockNumber);
 }
 

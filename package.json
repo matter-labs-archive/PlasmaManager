@@ -6,7 +6,7 @@
   "scripts": {
     "challengeSender": "node challengeSender.js",
     "eventMonitor": "node eventMonitor.js",
-    "uploader": "node blockUploader.js",
+    "blockAssembler": "node blockAssembler.js",
     "monitor": "node blockMonitor.js",
     "blockWriter": "node blockWriter.js",
     "proofSupplier": "node proofSupplier.js",
