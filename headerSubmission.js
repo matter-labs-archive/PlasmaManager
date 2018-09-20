@@ -13,16 +13,17 @@ const interval = config.blockAssemblyInterval;
 
 const web3 = new Web3(config.ethNodeAddress);
 const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
-// const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
-const contractDetails = config.contractDetails;
-// const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
-const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+let contractDetails;
+let PlasmaContract;
 
 async function main() {
 	try {
 		// console.log(web3.eth.accounts.wallet);
 		const allAccounts = await web3.eth.getAccounts();
 		const from = allAccounts[0];
+		contractDetails = await config.contractDetails();
+		PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+	
 		let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 		let lastSubmittedBlock = await getLastSubmittedBlockNumber();
 		console.log("Last uploaded Plasma block is " + lastUploadedBlock);

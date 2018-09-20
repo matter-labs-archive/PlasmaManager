@@ -5,9 +5,10 @@ const getRedisFunctions = require("./functions/createRedis");
 console.log("Node address is " + config.ethNodeAddress);
 
 const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
-const contractDetails = config.contractDetails;
+let contractDetails;
+// const contractDetails = await config.contractDetails();
 // const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
-const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+// const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 const {initMQ} = require("./functions/initMQ");
 const {processBlockForEvent} = require("./functions/processBlockForEvent")
 const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
@@ -26,6 +27,9 @@ async function startBlockProcessing() {
     }
     let fromBlock = await redisGet("fromBlock");
     fromBlock = Number.parseInt(fromBlock);
+    contractDetails = await config.contractDetails();
+    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+
 
     processBlockForEvents(fromBlock)().then((_dispose) => {
         console.log("Started block processing loop");

@@ -12,9 +12,7 @@ const {processExitChallengeFromQueue} = require("./functions/processExitChalleng
 const {processDepositExitChallengeFromQueue} = require("./functions/processDepositExitChallenge");
 const web3 = new Web3(config.ethNodeAddress);
 web3.eth.accounts.wallet.add(config.blockSenderKey);
-const contractDetails = config.contractDetails;
-// const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
-const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+let contractDetails;
 
 const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
 
@@ -23,6 +21,8 @@ async function startChallengeProcessing() {
 
     const redisClient = redis.createClient(config.redis);
     const mq = await initMQ(redisClient, eventNames)
+    contractDetails = await config.contractDetails();
+    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 
     // start loop to pop events from queue
 	setTimeout(processChallenges, 1000);
