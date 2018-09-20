@@ -32,7 +32,8 @@ async function getManifest() {
                     if (blockNumber > max) {
                         max = blockNumber
                     }
-                } catch {
+                } catch(error) {
+                    console.log(error)
                     console.log(file)
                 }
             })
