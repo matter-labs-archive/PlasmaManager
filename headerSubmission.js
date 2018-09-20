@@ -12,7 +12,7 @@ const Block = require("./lib/Block/RLPblock");
 const interval = config.blockAssemblyInterval;
 
 const web3 = new Web3(config.ethNodeAddress);
-web3.eth.accounts.wallet.add(config.blockSenderKey);
+const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
 // const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
 const contractDetails = config.contractDetails;
 // const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
@@ -26,7 +26,7 @@ async function main() {
 		let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 		let lastSubmittedBlock = await getLastSubmittedBlockNumber();
 		console.log("Last uploaded Plasma block is " + lastUploadedBlock);
-		console.log("Last uploaded header is for block " + lastSubmittedBlock);
+		console.log("Last commited header is for block " + lastSubmittedBlock);
 		lastSubmittedBlock = Number.parseInt(lastSubmittedBlock)
 		lastUploadedBlock = Number.parseInt(lastUploadedBlock)
 		if (lastUploadedBlock > lastSubmittedBlock) {
