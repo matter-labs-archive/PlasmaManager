@@ -10,10 +10,6 @@ const Web3 = require('web3');
 const {initMQ} = require("./functions/initMQ");
 const {processExitChallengeFromQueue} = require("./functions/processExitChallenge");
 const {processDepositExitChallengeFromQueue} = require("./functions/processDepositExitChallenge");
-const web3 = new Web3(config.ethNodeAddress);
-web3.eth.accounts.wallet.add(config.blockSenderKey);
-let contractDetails;
-
 const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
 
 async function startChallengeProcessing() {
@@ -21,7 +17,9 @@ async function startChallengeProcessing() {
 
     const redisClient = redis.createClient(config.redis);
     const mq = await initMQ(redisClient, eventNames)
-    contractDetails = await config.contractDetails();
+    const contractDetails = await config.contractDetails();
+    const web3 = new Web3(config.ethNodeAddress);
+    web3.eth.accounts.wallet.add(config.blockSenderKey);
     const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 
     // start loop to pop events from queue

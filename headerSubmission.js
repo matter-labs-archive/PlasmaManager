@@ -11,85 +11,86 @@ const BN = Web3.utils.BN;
 const Block = require("./lib/Block/RLPblock");
 const interval = config.blockAssemblyInterval;
 
-const web3 = new Web3(config.ethNodeAddress);
-const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
-let contractDetails;
-let PlasmaContract;
-
 async function main() {
-	try {
-		// console.log(web3.eth.accounts.wallet);
+		const contractDetails = await config.contractDetails();
+		const web3 = new Web3(config.ethNodeAddress);
+		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+		const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
 		const allAccounts = await web3.eth.getAccounts();
 		const from = allAccounts[0];
-		contractDetails = await config.contractDetails();
-		PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
-	
-		let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
-		let lastSubmittedBlock = await getLastSubmittedBlockNumber();
-		console.log("Last uploaded Plasma block is " + lastUploadedBlock);
-		console.log("Last commited header is for block " + lastSubmittedBlock);
-		lastSubmittedBlock = Number.parseInt(lastSubmittedBlock)
-		lastUploadedBlock = Number.parseInt(lastUploadedBlock)
-		if (lastUploadedBlock > lastSubmittedBlock) {
-			let buffer = Buffer.alloc(0);
-			let gasEstimate = 0;
-			const lashHashInBlockchain = await getLastSubmittedBlockHash();
-			console.log("In Plasma last hash is " + lashHashInBlockchain);
-			// try to assemble as large batch as possible withing the gas limit
-			for (let i = lastSubmittedBlock + 1; i <= lastUploadedBlock; i++) {
-			//for (let i = lastSubmittedBlock + 1; i <= lastSubmittedBlock + 1; i++) {
-				let block = await storage.getBlock(i);
-				// const bl = new Block(block);
-				// console.log("Block signed by " + ethUtil.bufferToHex(bl.getSenderAddress()));
-				// console.log("Block number is " + bl.header.blockNumber.toString('hex'));
-				// console.log("Previous hash is " + bl.header.parentHash.toString('hex'));
-				let newBuffer = Buffer.concat([buffer, block.slice(0, config.blockHeaderLength)]);
-				console.log("Headers length = " + newBuffer.length);
-				gasEstimate = await estimateGas(newBuffer, from);
-				console.log("Estimated gas = " + gasEstimate);
-				if (gasEstimate > config.gasLimit) {
-					break;
+
+		setTimeout(submitHeader, 1000)
+
+		async function submitHeader() {
+			try{ 
+				let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
+				let lastSubmittedBlock = await getLastSubmittedBlockNumber(PlasmaContract);
+				console.log("Last uploaded Plasma block is " + lastUploadedBlock);
+				console.log("Last commited header is for block " + lastSubmittedBlock);
+				lastSubmittedBlock = Number.parseInt(lastSubmittedBlock)
+				lastUploadedBlock = Number.parseInt(lastUploadedBlock)
+				if (lastUploadedBlock > lastSubmittedBlock) {
+					let buffer = Buffer.alloc(0);
+					let gasEstimate = 0;
+					const lashHashInBlockchain = await getLastSubmittedBlockHash(PlasmaContract);
+					console.log("In Plasma last hash is " + lashHashInBlockchain);
+					// try to assemble as large batch as possible withing the gas limit
+					for (let i = lastSubmittedBlock + 1; i <= lastUploadedBlock; i++) {
+					//for (let i = lastSubmittedBlock + 1; i <= lastSubmittedBlock + 1; i++) {
+						let block = await storage.getBlock(i);
+						// const bl = new Block(block);
+						// console.log("Block signed by " + ethUtil.bufferToHex(bl.getSenderAddress()));
+						// console.log("Block number is " + bl.header.blockNumber.toString('hex'));
+						// console.log("Previous hash is " + bl.header.parentHash.toString('hex'));
+						let newBuffer = Buffer.concat([buffer, block.slice(0, config.blockHeaderLength)]);
+						console.log("Headers length = " + newBuffer.length);
+						gasEstimate = await estimateGas(PlasmaContract, newBuffer, from);
+						console.log("Estimated gas = " + gasEstimate);
+						if (gasEstimate > config.gasLimit) {
+							break;
+						}
+						buffer = newBuffer;
+					}
+					if (buffer.length == 0) {
+						throw "Block " + (lastSubmittedBlock + 1) + " doesn't fit within gas limit " + config.gasLimit;
+					}
+					console.log("Total headers length = " + buffer.length);
+					gasEstimate = Math.floor(gasEstimate * 15 / 10)
+					await submitBlocks(PlasmaContract, buffer, gasEstimate, from);
+					console.log("submitted blocks from " + (lastSubmittedBlock + 1));
+					setTimeout(submitHeader, 1000); // submit the next block
+					return;
 				}
-				buffer = newBuffer;
+				setTimeout(submitHeader, interval);
 			}
-			if (buffer.length == 0) {
-				throw "Block " + (lastSubmittedBlock + 1) + " doesn't fit within gas limit " + config.gasLimit;
+			catch (err) {
+				console.log(err);
+				setTimeout(submitHeader, 1000);
 			}
-			console.log("Total headers length = " + buffer.length);
-			gasEstimate = Math.floor(gasEstimate * 15 / 10)
-			await submitBlocks(buffer, gasEstimate, from);
-			console.log("submitted blocks from " + (lastSubmittedBlock + 1));
-            setTimeout(main, 10); // submit the next block
-			return;
 		}
-        setTimeout(main, interval);
-	}
-	catch (err) {
-		console.log(err);
-		setTimeout(main, 10);
-	}
+		
 }
 main().catch(err => { console.log(err); process.exit(1); });
 
-async function submitBlocks(buffer, gas, from) {
+async function submitBlocks(PlasmaContract, buffer, gas, from) {
 	let result = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).send({gas: gas, from: from});
 }
 
-async function estimateGas(buffer, from) {
+async function estimateGas(PlasmaContract, buffer, from) {
 	let estimatedGas = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).estimateGas({gas: 7e6, from: from});
 	return estimatedGas;
 }
 
-async function getLastSubmittedBlockNumber() {
+async function getLastSubmittedBlockNumber(PlasmaContract) {
 	let lastBlock = await PlasmaContract.methods.lastBlockNumber().call();
 	return lastBlock;
 }
 
-async function getLastSubmittedBlockHash() {
+async function getLastSubmittedBlockHash(PlasmaContract) {
 	let hash = await PlasmaContract.methods.hashOfLastSubmittedBlock().call();
 	return hash;
 }
 
-async function canWriteBlocks(from) {
+// async function canWriteBlocks(from) {
 	
-}
+// }
