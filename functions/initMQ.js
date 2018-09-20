@@ -15,6 +15,12 @@ async function initMQ(redis, eventNames, purge) {
             await mq.createQueue({qname});
         }
     }
+    for (const eventName of eventNames) {
+	    const qname = `eventchallenge-${eventName}`;
+	    if (!allQueues.includes(qname)) {
+            await mq.createQueue({qname});
+        }
+    }
     console.log(allQueues);
     return mq
 }

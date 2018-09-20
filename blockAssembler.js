@@ -16,14 +16,16 @@ async function main() {
 		let lastHash = await getBlockHash(lastBlock, storage, config.blockHeaderLength);
 		let newBlock = await assembleBlock(lastBlock + 1, lastHash, assemblerEndpoint);
 		await storage.storeBlock(newBlock);
+		setTimeout(main, assemblyInterval);
+		return
 	}
 	catch (err) {
-		// setTimeout(main, 1000)
-		// return
 		console.log(err);
+		setTimeout(main, 5000)
+		return
 	}
 	// TODO may be check for block overflow while waiting
-	setTimeout(main, assemblyInterval);
+
 }
 
 main().catch(err => { console.log(err); process.exit(1); });

@@ -9,18 +9,20 @@ const ethUtil = require('ethereumjs-util');
 const Web3 = require('web3');
 const BN = Web3.utils.BN;
 const Block = require("./lib/Block/RLPblock");
-
-const TruffleContract = require('truffle-contract');
+const interval = config.blockAssemblyInterval;
 
 const web3 = new Web3(config.ethNodeAddress);
 web3.eth.accounts.wallet.add(config.blockSenderKey);
-const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
-
-const PlasmaContract = new web3.eth.Contract(PlasmaContractModel.abi, config.contractAddress, {from: config.fromAddress});
+// const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
+const contractDetails = config.contractDetails;
+// const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
+const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 
 async function main() {
 	try {
 		// console.log(web3.eth.accounts.wallet);
+		const allAccounts = await web3.eth.getAccounts();
+		const from = allAccounts[0];
 		let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 		let lastSubmittedBlock = await getLastSubmittedBlockNumber();
 		console.log("Last uploaded Plasma block is " + lastUploadedBlock);
@@ -36,12 +38,13 @@ async function main() {
 			for (let i = lastSubmittedBlock + 1; i <= lastUploadedBlock; i++) {
 			//for (let i = lastSubmittedBlock + 1; i <= lastSubmittedBlock + 1; i++) {
 				let block = await storage.getBlock(i);
-				const bl = new Block(block);
-				console.log("Block number is " + bl.header.blockNumber.toString('hex'));
-				console.log("Previous hash is " + bl.header.parentHash.toString('hex'));
+				// const bl = new Block(block);
+				// console.log("Block signed by " + ethUtil.bufferToHex(bl.getSenderAddress()));
+				// console.log("Block number is " + bl.header.blockNumber.toString('hex'));
+				// console.log("Previous hash is " + bl.header.parentHash.toString('hex'));
 				let newBuffer = Buffer.concat([buffer, block.slice(0, config.blockHeaderLength)]);
 				console.log("Headers length = " + newBuffer.length);
-				gasEstimate = await estimateGas(newBuffer);
+				gasEstimate = await estimateGas(newBuffer, from);
 				console.log("Estimated gas = " + gasEstimate);
 				if (gasEstimate > config.gasLimit) {
 					break;
@@ -52,26 +55,27 @@ async function main() {
 				throw "Block " + (lastSubmittedBlock + 1) + " doesn't fit within gas limit " + config.gasLimit;
 			}
 			console.log("Total headers length = " + buffer.length);
-			await submitBlocks(buffer, gasEstimate);
+			gasEstimate = Math.floor(gasEstimate * 15 / 10)
+			await submitBlocks(buffer, gasEstimate, from);
 			console.log("submitted blocks from " + (lastSubmittedBlock + 1));
             setTimeout(main, 10); // submit the next block
 			return;
 		}
-        setTimeout(main, config.interval);
+        setTimeout(main, interval);
 	}
 	catch (err) {
 		console.log(err);
-		setTimeout(main, config.interval);
+		setTimeout(main, 10);
 	}
 }
 main().catch(err => { console.log(err); process.exit(1); });
 
-async function submitBlocks(buffer, gas) {
-	let result = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).send({gas: gas});
+async function submitBlocks(buffer, gas, from) {
+	let result = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).send({gas: gas, from: from});
 }
 
-async function estimateGas(buffer) {
-	let estimatedGas = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).estimateGas({gas: 7e6});
+async function estimateGas(buffer, from) {
+	let estimatedGas = await PlasmaContract.methods.submitBlockHeaders(ethUtil.bufferToHex(buffer)).estimateGas({gas: 7e6, from: from});
 	return estimatedGas;
 }
 
@@ -83,4 +87,8 @@ async function getLastSubmittedBlockNumber() {
 async function getLastSubmittedBlockHash() {
 	let hash = await PlasmaContract.methods.hashOfLastSubmittedBlock().call();
 	return hash;
+}
+
+async function canWriteBlocks(from) {
+	
 }

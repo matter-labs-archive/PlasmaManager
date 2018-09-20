@@ -1,25 +1,30 @@
 const config = require('./config');
 const Web3 = require('web3');
-const TruffleContract = require('truffle-contract');
 const redis = require("redis");
 const getRedisFunctions = require("./createRedis");
 console.log("Node address is " + config.ethNodeAddress);
 
 const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
-const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
-const PlasmaContract = new web3.eth.Contract(PlasmaContractModel.abi, config.contractAddress, {from: config.fromAddress});
+const contractDetails = config.contractDetails;
+// const PlasmaContractModel = TruffleContract(require("./contracts/build/contracts/PlasmaParent.json"));
+const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 const {initMQ} = require("./functions/initMQ");
 const {processBlockForEvent} = require("./functions/processBlockForEvent")
-const eventNames = ["DepositEvent", "WithdrawRequestAcceptedEvent", "DepositWithdrawStartedEvent"];
+const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
 
 async function startBlockProcessing() {
-    // init MQ
-    const mq = await initMQ(redis, eventNames)
-    // start loop 
+    // init MQ and start the loop
     const redisClient = redis.createClient(config.redis);
+    const mq = await initMQ(redisClient, eventNames, true)
     const redisFunctions = await getRedisFunctions(redisClient);
-    const {redisGet, redisSet} = redisFunctions;
-    let fromBlock = await redisGet("fromBlock");
+    const {redisGet, redisSet, redisExists} = redisFunctions;
+    const fromBlockFromConfig = config.fromBlock;
+    let fromBlock = fromBlockFromConfig
+    // let exists = await redisExists("fromBlock");
+    // if (!exists) {
+    //     await redisSet("fromBlock", config.fromBlock)
+    // }
+    // let fromBlock = await redisGet("fromBlock");
     fromBlock = Number.parseInt(fromBlock);
 
     processBlockForEvents(fromBlock)().then((_dispose) => {
@@ -36,14 +41,13 @@ async function startBlockProcessing() {
                 }
                 if (lastblock > previousBlockNumber) {
                     lastblock = previousBlockNumber + 1;
-                    // lastProcessedBlock = lastblock;
-                    console.log("Started at block " + lastblock);
+                    console.log("Processing block " + lastblock);
                     await processBlock(lastblock)();
                     await redisSet("fromBlock", lastblock);
-                    setTimeout(processBlockForEvents(lastblock), 100);
+                    setTimeout(processBlockForEvents(lastblock), 1000);
                     return;
                 } else {
-                    setTimeout(processBlockForEvents(lastblock), 1000);
+                    setTimeout(processBlockForEvents(lastblock), 10000);
                     return;
                 }
             }

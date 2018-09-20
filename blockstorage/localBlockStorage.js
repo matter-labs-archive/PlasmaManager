@@ -21,6 +21,23 @@ async function getBlock(blockNumber) {
 }
 
 async function getManifest() {
+    if (config.localStorageDirName !== null &&
+        config.localStorageDirName !== undefined && 
+        config.localStorageDirName !== "") {
+            // console.log("Reading from local folder")
+            let max = 0
+            fs.readdirSync(config.localStorageDirName).forEach(file => {
+                try {
+                    const blockNumber = Number.parseInt(file)
+                    if (blockNumber > max) {
+                        max = blockNumber
+                    }
+                } catch {
+                    console.log(file)
+                }
+            })
+            return {lastBlock: max}
+    }
     let manifest = {lastBlock: lastBlock};
     return manifest;
 }
@@ -33,8 +50,9 @@ async function storeBlock(block) {
     }
     lastBlock++;
     const blockDirectory = getBlockDirectory()
+    console.log("Writing to " + blockDirectory);
     fs.writeFileSync(blockDirectory + blockNumber, block);
-    console.log("uploaded block " + blockNumber);
+    console.log("Uploaded block " + blockNumber);
 }
 
 module.exports = {

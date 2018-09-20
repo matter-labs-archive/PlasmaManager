@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "challengeSender": "node challengeSender.js",
+    "challengeProcessor": "node challengeProcessor.js",
+    "eventProcessor": "node eventProcessor.js",
     "eventMonitor": "node eventMonitor.js",
     "blockAssembler": "node blockAssembler.js",
-    "monitor": "node blockMonitor.js",
+    "headerCommiter": "node headerSubmission.js",
     "blockWriter": "node blockWriter.js",
     "proofSupplier": "node proofSupplier.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,17 +20,17 @@
     "dotenv": "^5.0.1",
     "ethereumjs-util": "^5.2.0",
     "is-buffer": "^2.0.2",
-    "js-sha3": "^0.7.0",
+    "js-sha3": "^0.8.0",
     "jsonschema": "^1.2.4",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
-    "rsmq": "^0.8.3",
-    "rsmq-promise": "^1.0.1",
+    "rsmq": "^0.9.2",
+    "rsmq-promise": "^1.0.2",
     "truffle": "^4.1.8",
     "truffle-contract": "^3.0.5",
     "truffle-test-utils": "^0.1.0",
-    "web3": "^1.0.0-beta.34",
-    "redis": "latest"
+    "web3": "^1.0.0-beta.36",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "eslint-config-airbnb-base": "^12.1.0",

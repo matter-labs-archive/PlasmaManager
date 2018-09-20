@@ -1,6 +1,7 @@
 const rp = require("request-promise-native");
 
 async function writeBlock(block, writerEndpoint) {
+	console.log("Writing to " + writerEndpoint)
 	if (block === undefined || block === null || block.length === undefined || block.length === 0) {
 		console.log("Block is empty");
 		return false;
@@ -14,7 +15,7 @@ async function writeBlock(block, writerEndpoint) {
             headers: {
                 'content-type': "application/octet-stream"
             },
-			timeout: 300*1000
+			timeout: 30*1000
 		};
 		let writeResult = await rp(options);
 		if (writeResult.error == true) {
