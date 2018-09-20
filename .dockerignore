@@ -1,0 +1,12 @@
+.env
+.env.example
+node_modules
+tests
+testScripts
+.vscode
+.eslintrc.yml
+.gitignore
+.gitmodules
+.soliumrc.json
+.git
+.DS_Store

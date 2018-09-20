@@ -18,13 +18,13 @@ async function startBlockProcessing() {
     const mq = await initMQ(redisClient, eventNames)
     const redisFunctions = await getRedisFunctions(redisClient);
     const {redisGet, redisSet, redisExists} = redisFunctions;
-    const fromBlockFromConfig = config.fromBlock;
-    let fromBlock = fromBlockFromConfig
-    // let exists = await redisExists("fromBlock");
-    // if (!exists) {
-    //     await redisSet("fromBlock", config.fromBlock)
-    // }
-    // let fromBlock = await redisGet("fromBlock");
+    // const fromBlockFromConfig = config.fromBlock;
+    // let fromBlock = fromBlockFromConfig
+    let exists = await redisExists("fromBlock");
+    if (!exists) {
+        await redisSet("fromBlock", config.fromBlock)
+    }
+    let fromBlock = await redisGet("fromBlock");
     fromBlock = Number.parseInt(fromBlock);
 
     processBlockForEvents(fromBlock)().then((_dispose) => {
