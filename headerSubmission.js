@@ -16,13 +16,12 @@ async function main() {
 		const web3 = new Web3(config.ethNodeAddress);
 		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
 		const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
-		const allAccounts = await web3.eth.getAccounts();
-		const from = allAccounts[0];
-
 		setTimeout(submitHeader, 1000)
 
 		async function submitHeader() {
 			try{ 
+				const allAccounts = await web3.eth.getAccounts();
+				const from = allAccounts[0];
 				let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 				let lastSubmittedBlock = await getLastSubmittedBlockNumber(PlasmaContract);
 				console.log("Last uploaded Plasma block is " + lastUploadedBlock);
