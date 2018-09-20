@@ -2,19 +2,12 @@ const config = require('./config');
 const storage = require('./blockstorage/digitalOceanStorage');
 const ethUtil = require("ethereumjs-util");
 const Web3 = require("web3");
-const BN = Web3.utils.BN;
 
 const validateSchema = require('jsonschema').validate;
 const express        = require('express');
 const app            = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-if (config.verbose) {
-    app.use(function (req, res, next) {
-        console.log([req.method, req.url].join(' '));
-        next();
-      });
-}
 
 const Block = require("./lib/Block/RLPblock");
 
@@ -36,7 +29,7 @@ function main() {
             }
             const blockNumber = Web3.utils.toBN(req.body.blockNumber)
             const txNumber = Web3.utils.toBN(req.body.txNumber);
-            const blockBuffer = await getBlock(req.body.blockNumber);
+            const blockBuffer = await getBlock(blockNumber.toString(10));
             const block = new Block(blockBuffer);
             const txNumberInt = txNumber.toNumber();
             const proofData = block.getProofForTransactionByNumber(txNumberInt);

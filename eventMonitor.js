@@ -1,7 +1,7 @@
 const config = require('./config');
 const Web3 = require('web3');
 const redis = require("redis");
-const getRedisFunctions = require("./createRedis");
+const getRedisFunctions = require("./functions/createRedis");
 console.log("Node address is " + config.ethNodeAddress);
 
 const web3 = new Web3(new Web3.providers.HttpProvider(config.ethNodeAddress));
@@ -15,7 +15,7 @@ const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedE
 async function startBlockProcessing() {
     // init MQ and start the loop
     const redisClient = redis.createClient(config.redis);
-    const mq = await initMQ(redisClient, eventNames, true)
+    const mq = await initMQ(redisClient, eventNames)
     const redisFunctions = await getRedisFunctions(redisClient);
     const {redisGet, redisSet, redisExists} = redisFunctions;
     const fromBlockFromConfig = config.fromBlock;

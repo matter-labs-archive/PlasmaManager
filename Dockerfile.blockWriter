@@ -1,4 +1,4 @@
-FROM node:10.3
+FROM node:9.11.1
 WORKDIR /usr/src/app
 RUN npm install -g truffle
 RUN cd /usr/local/lib/node_modules/truffle && npm install solc@0.4.24 && cd -
