@@ -42,7 +42,7 @@ module.exports = {
         password: env.REDIS_PASSWORD
 	},
 
-	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 1,
+	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 0,
 };
 
 async function getContractDetails() {
