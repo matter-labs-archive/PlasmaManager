@@ -1,4 +1,4 @@
-all: assembler writer challengeprocessor eventmonitor eventprocessor commiter
+all: assembler writer challengeprocessor eventmonitor eventprocessor commiter wrapper
 
 assembler:
 	docker build -f Dockerfile.blockAssembler -t thematterio/blockassembler:assembler -t assembler . 
@@ -23,3 +23,7 @@ eventprocessor:
 commiter:
 	docker build -f Dockerfile.headerCommiter -t thematterio/headercommiter:commiter -t commiter . 
 	docker push thematterio/headercommiter:commiter
+
+wrapper:
+	docker build -f Dockerfile.wrapper -t thematterio/wrapper:wrapper -t wrapper . 
+	docker push thematterio/wrapper:wrapper

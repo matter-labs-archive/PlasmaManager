@@ -13,15 +13,18 @@ const interval = config.blockAssemblyInterval;
 
 async function main() {
 		const contractDetails = await config.contractDetails();
+		console.log("Connecting to the node " + config.ethNodeAddress)
 		const web3 = new Web3(config.ethNodeAddress);
-		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 		const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
 		setTimeout(submitHeader, 1000)
 
 		async function submitHeader() {
 			try{ 
+				console.log("Trying to submit headers")
 				const allAccounts = await web3.eth.getAccounts();
 				const from = allAccounts[0];
+				console.log("Got account")
 				let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 				let lastSubmittedBlock = await getLastSubmittedBlockNumber(PlasmaContract);
 				console.log("Last uploaded Plasma block is " + lastUploadedBlock);

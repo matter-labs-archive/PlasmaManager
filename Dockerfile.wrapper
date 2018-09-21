@@ -1,0 +1,11 @@
+FROM node:9.11.1
+WORKDIR /usr/src/app
+RUN npm install -g truffle
+RUN cd /usr/local/lib/node_modules/truffle && npm install solc@0.4.24 && cd -
+COPY package.json package-lock.json ./
+RUN npm install
+RUN npm install # voodoo magic, do not remove
+COPY . .
+#RUN cd contracts && truffle compile
+EXPOSE 80
+CMD ["npm", "run", "wrapper"]

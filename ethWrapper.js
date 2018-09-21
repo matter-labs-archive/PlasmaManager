@@ -63,7 +63,7 @@ function main() {
             const web3 = new Web3(config.ethNodeAddress);
             // const importedAccount = web3.eth.accounts.wallet.add(privateKey);
             // console.log(importedAccount);
-            const contractDetails = config.contractDetails;
+            const contractDetails = await config.contractDetails();
             const acc = req.body.from;
             const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
             const withdrawCollateral = await PlasmaContract.methods.WithdrawCollateral().call()
@@ -89,7 +89,7 @@ function main() {
             const depositIndex = Web3.utils.toBN(req.body.depositIndex)
             
             const web3 = new Web3(config.ethNodeAddress);
-            const contractDetails = config.contractDetails;
+            const contractDetails = await config.contractDetails();
             const acc = req.body.from;
             const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
             const collateral = await PlasmaContract.methods.DepositWithdrawCollateral().call()
@@ -115,7 +115,7 @@ function main() {
             const web3 = new Web3(config.ethNodeAddress);
             // const importedAccount = web3.eth.accounts.wallet.add(privateKey);
             // console.log(importedAccount);
-            const contractDetails = config.contractDetails;
+            const contractDetails = await config.contractDetails();
             const acc = req.body.for;
             const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
             let gas = await PlasmaContract.methods.deposit().estimateGas({from: acc, value: amount})
@@ -129,12 +129,31 @@ function main() {
             return res.json({error: true})
         }
     })
+    // app.post('/sendTX', async function(req, res) {
+    //     try{
+    //         const privateKey = ethUtil.toBuffer(req.body.privateKey)
+    //         const tx = createTransaction(1, req.body.inputs, req.body.outputs, privateKey)
+    //         const txHex = ethUtil.bufferToHex(tx.serialize())
+    //         const receipt = await sendTransaction(txHex, "127.0.0.1:3001")
+    //         return res.json({receipt})
+    //     }
+    //     catch(error) {
+    //         console.log(error);
+    //         return res.json({error: true})
+    //     }
+    // })
     app.post('/sendTX', async function(req, res) {
         try{
-            const privateKey = ethUtil.toBuffer(req.body.privateKey)
-            const tx = createTransaction(1, req.body.inputs, req.body.outputs, privateKey)
+            const from = req.body.from
+            const crypto = require('crypto');
+            const emptyPK = crypto.randomBytes(32)
+            const tx = createTransaction(1, req.body.inputs, req.body.outputs, emptyPK)
+            const toSign = ethUtil.bufferToHex(tx.transaction.serialize())
+            const web3 = new Web3(config.ethNodeAddress);
+            const signature = await web3.eth.sign(toSign, from)
+            tx.serializeSignature(signature)
             const txHex = ethUtil.bufferToHex(tx.serialize())
-            const receipt = await sendTransaction(txHex, "127.0.0.1:3001")
+            const receipt = await sendTransaction(txHex, config.txProcessorEndpoint)
             return res.json({receipt})
         }
         catch(error) {
