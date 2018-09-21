@@ -1,6 +1,6 @@
 const util = require("util");
 
-async function getRedisFunctions(redisClient) {
+function getRedisFunctions(redisClient) {
     const redisExists = util.promisify(redisClient.exists).bind(redisClient);
     const redisGet = util.promisify(redisClient.get).bind(redisClient);
     const redisSet = util.promisify(redisClient.set).bind(redisClient);

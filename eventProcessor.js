@@ -7,8 +7,8 @@ const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedE
 
 async function startEventProcessing() {
     // init MQ
-    const redisClient = redis.createClient(config.redis);
-    const mq = await initMQ(redisClient, eventNames)
+    // const redisClient = redis.createClient(config.redis);
+    const mq = await initMQ(config.redis, eventNames)
     // start loop to pop events from queue
 	setTimeout(processEvents, 1000);
     

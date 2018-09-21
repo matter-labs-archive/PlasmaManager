@@ -37,12 +37,12 @@ module.exports = {
 
 	redis: {
 		host: env.REDIS_HOST || 'localhost',
-		port: env.REDIS_PORT || 6379,
+		port: Number.parseInt(env.REDIS_PORT, 10) || 6379,
         string_numbers: true,
         password: env.REDIS_PASSWORD
 	},
 
-	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 0,
+	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 1,
 };
 
 async function getContractDetails() {

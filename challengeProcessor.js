@@ -15,12 +15,12 @@ const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedE
 async function startChallengeProcessing() {
     // init MQ
 
-    const redisClient = redis.createClient(config.redis);
-    const mq = await initMQ(redisClient, eventNames)
+    // const redisClient = redis.createClient(config.redis);
+    const mq = await initMQ(config.redis, eventNames)
     const contractDetails = await config.contractDetails();
     const web3 = new Web3(config.ethNodeAddress);
-    web3.eth.accounts.wallet.add(config.blockSenderKey);
-    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
+    // web3.eth.accounts.wallet.add(config.blockSenderKey);
+    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 
     // start loop to pop events from queue
 	setTimeout(processChallenges, 1000);

@@ -2,30 +2,38 @@ const config = require('./config');
 const Web3 = require('web3');
 const redis = require("redis");
 const getRedisFunctions = require("./functions/createRedis");
-console.log("Node address is " + config.ethNodeAddress);
 const {initMQ} = require("./functions/initMQ");
 const {processBlockForEvent} = require("./functions/processBlockForEvent")
 const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
 
 async function startBlockProcessing() {
     // init MQ and start the loop
+    console.log("Creating redis")
+    console.log(JSON.stringify(config.redis));
     const redisClient = redis.createClient(config.redis);
-    const mq = await initMQ(redisClient, eventNames)
-    const redisFunctions = await getRedisFunctions(redisClient);
+    console.log("Initializing message queue")
+    const mq = await initMQ(config.redis, eventNames)
+    console.log("Getting the block number to start with")
+    const redisFunctions = getRedisFunctions(redisClient);
     const {redisGet, redisSet, redisExists} = redisFunctions;
-    // const fromBlockFromConfig = config.fromBlock;
-    // let fromBlock = fromBlockFromConfig
     let exists = await redisExists("fromBlock");
     if (!exists) {
+        console.log("Writing default starting block " + config.fromBlock)
         await redisSet("fromBlock", config.fromBlock)
     }
     let fromBlock = await redisGet("fromBlock");
-    fromBlock = Number.parseInt(fromBlock);
+    console.log("Last processed block from persistance is " + fromBlock)
+    fromBlock = Number.parseInt(fromBlock, 10);
+    if (fromBlock === undefined || isNaN(fromBlock)) {
+        console.log("Fallback, starting from block 1")
+        // fromBlock = Number.parseInt(config.fromBlock, 10);
+        fromBlock = 1
+    }
+    console.log("Getting contract details")
     const contractDetails = await config.contractDetails();
     const web3 = new Web3(config.ethNodeAddress);
-    web3.eth.accounts.wallet.add(config.blockSenderKey);
-    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address, {from: config.fromAddress});
-
+    const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
+    console.log("Starting from block " + fromBlock)
 
     processBlockForEvents(fromBlock)().then((_dispose) => {
         console.log("Started block processing loop");
@@ -35,14 +43,15 @@ async function startBlockProcessing() {
         return async function() {
             try{
                 let lastblock = await web3.eth.getBlockNumber();
-                lastblock = lastblock - config.blocks_shift;
-                if (previousBlockNumber === -1) {
-                    previousBlockNumber = lastblock-1;
-                }
+                // console.log("Last Ethereum block " + lastblock)
                 if (lastblock > previousBlockNumber) {
                     lastblock = previousBlockNumber + 1;
-                    console.log("Processing block " + lastblock);
-                    await processBlock(lastblock)();
+                    let blockToProcess = lastblock - config.blocks_shift;
+                    if (blockToProcess <= 1) {
+                        blockToProcess = 1
+                    }
+                    console.log("Processing block " + blockToProcess);
+                    await processBlock(blockToProcess)();
                     await redisSet("fromBlock", lastblock);
                     setTimeout(processBlockForEvents(lastblock), 1000);
                     return;
