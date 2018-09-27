@@ -24,13 +24,15 @@ function createTransaction(transactionType, inputs, outputs, privateKey) {
         })
         allInputs.push(inp)
     }
-
+    let j = 0
     for (const output of outputs) {
         const out = new TransactionOutput({
+            outputNum: (new BN(j)).toBuffer("be", 1),
             amountBuffer: (new BN(output.amount)).toBuffer("be",32),
             to: ethUtil.toBuffer(output.to)
         })
         allOutputs.push(out)
+        j++
     }
 
     const plasmaTransaction = new PlasmaTransaction({
