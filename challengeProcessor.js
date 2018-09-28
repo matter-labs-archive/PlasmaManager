@@ -5,7 +5,7 @@ if (config.debug) {
 } else {
 	storage = require('./blockstorage/digitalOceanStorage');
 }
-const redis = require("redis");
+
 const Web3 = require('web3');
 const {initMQ} = require("./functions/initMQ");
 const {processExitChallengeFromQueue} = require("./functions/processExitChallenge");
@@ -15,11 +15,13 @@ const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedE
 async function startChallengeProcessing() {
     // init MQ
 
-    // const redisClient = redis.createClient(config.redis);
     const mq = await initMQ(config.redis, eventNames)
     const contractDetails = await config.contractDetails();
     const web3 = new Web3(config.ethNodeAddress);
-    // web3.eth.accounts.wallet.add(config.blockSenderKey);
+    const allKeys = config.challengeSenderKeys;
+    for (const key of allKeys) {
+        web3.eth.accounts.wallet.add(key);
+    }
     const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 
     // start loop to pop events from queue

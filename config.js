@@ -32,6 +32,7 @@ module.exports = {
 	fromAddress: env.ETH_FROM,
 	ethNodeAddress: env.ETH_NODE || 'http://localhost:8545',
 	blockSenderKey: env.ETH_KEY || "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3",
+	challengeSenderKeys: getChallengeSendersKeys(),
 	// contractAddress: require('./details.json').address,
 	contractDetails: getContractDetails,
 
@@ -58,4 +59,13 @@ async function getContractDetails() {
 	}
 	const contractDetails = JSON.parse(fs.readFileSync(__dirname+"/contracts/build/details").toString("utf8"))
 	return contractDetails
+}
+
+function getChallengeSendersKeys() {
+	const fromEnv =env.CHAL_KEYS
+	const allKeys = fromEnv.split(",")
+	if (allKeys.length == 0) {
+		return [env.ETH_KEY]
+	}
+	return allKeys
 }
