@@ -43,7 +43,8 @@ module.exports = {
         password: env.REDIS_PASSWORD
 	},
 
-	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 0,
+	blocks_shift: Number.parseInt(env.BLOCKS_SHIFT, 10) || 6,
+	deposit_blocks_shift: Number.parseInt(env.DEPOSIT_BLOCKS_SHIFT, 10) || 25,
 };
 
 async function getContractDetails() {
@@ -62,7 +63,10 @@ async function getContractDetails() {
 }
 
 function getChallengeSendersKeys() {
-	const fromEnv =env.CHAL_KEYS
+	const fromEnv = env.CHAL_KEYS
+	if (fromEnv === undefined || fromEnv === "") {
+		return [env.ETH_KEY]
+	}
 	const allKeys = fromEnv.split(",")
 	if (allKeys.length == 0) {
 		return [env.ETH_KEY]

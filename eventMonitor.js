@@ -5,6 +5,8 @@ const getRedisFunctions = require("./functions/createRedis");
 const {initMQ} = require("./functions/initMQ");
 const {processBlockForEvent} = require("./functions/processBlockForEvent")
 const eventNames = ["DepositEvent", "ExitStartedEvent", "DepositWithdrawStartedEvent"];
+const fastEventNames = ["ExitStartedEvent", "DepositWithdrawStartedEvent"];
+const slowEventNames = ["DepositEvent"];
 
 async function startBlockProcessing() {
     // init MQ and start the loop
@@ -26,8 +28,8 @@ async function startBlockProcessing() {
     fromBlock = Number.parseInt(fromBlock, 10);
     if (fromBlock === undefined || isNaN(fromBlock)) {
         console.log("Fallback, starting from block 1")
-        // fromBlock = Number.parseInt(config.fromBlock, 10);
-        fromBlock = 1
+        fromBlock = Number.parseInt(config.fromBlock, 10);
+        // fromBlock = 1
     }
     console.log("Getting contract details")
     const contractDetails = await config.contractDetails();
@@ -46,7 +48,7 @@ async function startBlockProcessing() {
                 // console.log("Last Ethereum block " + lastblock)
                 if (lastblock > previousBlockNumber) {
                     lastblock = previousBlockNumber + 1;
-                    let blockToProcess = lastblock - config.blocks_shift;
+                    let blockToProcess = lastblock;
                     if (blockToProcess <= 1) {
                         blockToProcess = 1
                     }
@@ -73,9 +75,15 @@ async function startBlockProcessing() {
 
     function processBlock(blockNumber) {
         return async function() {
-            for (const eventName of eventNames) {
-                const numProcessed = await processBlockForEvent(blockNumber, eventName, PlasmaContract, mq)
-                console.log("Processed " + numProcessed + " of events " + eventName + " in block " + blockNumber)
+            for (const eventName of fastEventNames) {
+                const toProcess = blockNumber - config.blocks_shift;
+                const numProcessed = await processBlockForEvent(toProcess, eventName, PlasmaContract, mq)
+                console.log("Processed " + numProcessed + " of events " + eventName + " in block " + toProcess)
+            }
+            for (const eventName of slowEventNames) {
+                const toProcess = blockNumber - config.deposit_blocks_shift;
+                const numProcessed = await processBlockForEvent(toProcess, eventName, PlasmaContract, mq)
+                console.log("Processed " + numProcessed + " of events " + eventName + " in block " + toProcess)
             }
         }
     }

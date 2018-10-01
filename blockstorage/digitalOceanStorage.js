@@ -1,6 +1,6 @@
 const config = require('./blockstorageConfig');
 const aws = require('aws-sdk');
-const s3 = new aws.S3({endpoint: new aws.Endpoint('ams3.digitaloceanspaces.com')});
+const s3 = new aws.S3({endpoint: new aws.Endpoint(config.connectionString)});
 
 async function getManifest() {
 	let manifest = {lastBlock: 0};

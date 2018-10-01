@@ -17,6 +17,7 @@ async function main() {
 		const web3 = new Web3(config.ethNodeAddress);
 		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 		const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
+		console.log("Imported account " + importedWallet.address);
 		setTimeout(submitHeader, 1000)
 
 		async function submitHeader() {

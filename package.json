@@ -30,7 +30,7 @@
     "truffle": "^4.1.8",
     "truffle-contract": "^3.0.5",
     "truffle-test-utils": "^0.1.0",
-    "web3": "^1.0.0-beta.36",
+    "web3": "^1.0.0-beta.35",
     "redis": "^2.8.0"
   },
   "devDependencies": {

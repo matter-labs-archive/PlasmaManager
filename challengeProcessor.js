@@ -20,7 +20,8 @@ async function startChallengeProcessing() {
     const web3 = new Web3(config.ethNodeAddress);
     const allKeys = config.challengeSenderKeys;
     for (const key of allKeys) {
-        web3.eth.accounts.wallet.add(key);
+        const importedWallet = web3.eth.accounts.wallet.add(key);
+        console.log("Imported account " + importedWallet.address);
     }
     const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 
