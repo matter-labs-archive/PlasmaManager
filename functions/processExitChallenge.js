@@ -139,8 +139,15 @@ async function processToSend(message, plasmaContract, storage, web3) {
             } else {
                 const allAccounts = await web3.eth.getAccounts();
                 const numAccounts = allAccounts.length;
-                const randomAccountNumber = Math.floor(Math.random() * numAccounts); // random between 0 and numAccounts - 1
-                const account = allAccounts[randomAccountNumber];
+                let account = ""
+                if (numAccounts !== 0) {
+                    const randomAccountNumber = Math.floor(Math.random() * numAccounts); // random between 0 and numAccounts - 1
+                    account = allAccounts[randomAccountNumber];
+                } else {
+                    const numWallets = web3.eth.accounts.wallet.length;
+                    const randomAccountNumber = Math.floor(Math.random() * numWallets);
+                    account = web3.eth.accounts.wallet[randomAccountNumber].address;
+                }
                 // and get the nonce manually 
                 const nonce = await web3.eth.getTransactionCount(account, "pending")
                 let gas = await plasmaContract.methods.challengeNormalExitByShowingExitBeingSpent(

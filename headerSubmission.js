@@ -18,14 +18,18 @@ async function main() {
 		const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 		const importedWallet = web3.eth.accounts.wallet.add(config.blockSenderKey);
 		console.log("Imported account " + importedWallet.address);
+		const importedAddress = importedWallet.address;
 		setTimeout(submitHeader, 1000)
 
 		async function submitHeader() {
 			try{ 
 				console.log("Trying to submit headers")
 				const allAccounts = await web3.eth.getAccounts();
-				const from = allAccounts[0];
-				console.log("Got account")
+				console.log("Available accounts " + JSON.stringify(allAccounts));
+				let from = allAccounts[0];
+				if (from === undefined || from === "") {
+					from = importedAddress
+				}
 				let lastUploadedBlock = await storage.getLastUploadedBlockNumber();
 				let lastSubmittedBlock = await getLastSubmittedBlockNumber(PlasmaContract);
 				console.log("Last uploaded Plasma block is " + lastUploadedBlock);
