@@ -57,9 +57,9 @@ async function processToSend(message, plasmaContract, storage, web3) {
 
             const previousTransactionParameters = message.previousTransactionParameters;
             
-            // event ExitStartedEvent(address indexed _from, uint72 _priority, uint72 indexed _index, bytes22 indexed _hash);
+            // event ExitStartedEvent(address indexed _from, uint72 _priority, uint72 indexed _index, bytes22 indexed _partialHash);
 
-            const exitHash = event._hash;
+            const exitHash = event._partialHash;
 
             const blockBytes = await storage.getBlock(spentInBlock);
             const block = new Block(blockBytes);
@@ -223,7 +223,7 @@ async function processToCheck(message, plasmaContract, web3) {
         now = Math.floor((new Date()).getTime() / 1000);
 
         let alreadyChallenged = false
-        const exitHash = event._hash;
+        const exitHash = event._partialHash;
     
         console.log("Check if already challenged")
 
