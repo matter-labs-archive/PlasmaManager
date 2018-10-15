@@ -1,7 +1,7 @@
 const config = require('./config');
 const ethUtil = require('ethereumjs-util');
 const Web3 = require('web3');
-const interval = config.blockAssemblyInterval;
+const interval = 60*1000; // 1 minute
 let itemsToPop = 10;
 
 async function main() {
