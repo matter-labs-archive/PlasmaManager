@@ -8,7 +8,7 @@ if (config.debug) {
 const ethUtil = require('ethereumjs-util');
 const Web3 = require('web3');
 const BN = Web3.utils.BN;
-const Block = require("./lib/Block/RLPblock");
+const {Block} = require("./lib/Block/RLPblock");
 const interval = config.blockAssemblyInterval;
 
 async function main() {

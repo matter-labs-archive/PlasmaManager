@@ -9,7 +9,7 @@ const app            = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-const Block = require("./lib/Block/RLPblock");
+const {Block} = require("./lib/Block/RLPblock");
 
 const requestSchema =
 {

@@ -13,7 +13,7 @@ const app            = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-const Block = require("./lib/Block/RLPblock");
+const {Block} = require("./lib/Block/RLPblock");
 const {createTransaction} = require("./functions/createTransaction");
 const {sendTransaction} = require("./functions/sendTransaction");
 

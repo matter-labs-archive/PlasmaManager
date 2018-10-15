@@ -1,4 +1,4 @@
-const Block = require("../lib/Block/RLPblock");
+const {Block} = require("../lib/Block/RLPblock");
 const ResendDelay = 60*60*5 // 5 hours
 const ethUtil = require("ethereumjs-util");
 

@@ -12,6 +12,7 @@
     "blockWriter": "node blockWriter.js",
     "proofSupplier": "node proofSupplier.js",
     "wrapper": "node ethWrapper.js",
+    "queueKicker": "node queueKicker.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

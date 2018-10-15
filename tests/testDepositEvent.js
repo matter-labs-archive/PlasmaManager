@@ -24,7 +24,7 @@ const web3 = new Web3(config.ethNodeAddress);
 web3.eth.accounts.wallet.add(ethUtil.bufferToHex(alice));
 const PlasmaContract = new web3.eth.Contract(config.contractDetails.abi, config.contractDetails.address, {from: config.fromAddress});
 const assert = require("assert")
-const Block = require("../lib/Block/RLPblock");
+const {Block} = require("../lib/Block/RLPblock");
 
 async function putDeposit() {
     const allAccounts = await web3.eth.getAccounts();
