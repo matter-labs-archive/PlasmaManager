@@ -25,11 +25,13 @@ async function main() {
 				}
                 let gasEstimate = await PlasmaContract.methods.finalizeExits(itemsToPop).estimateGas({from: from})
                 console.log("Looks like there are matured exits in queue");
+                console.log("Gas estimate is " + gasEstimate)
                 gasEstimate = Math.floor(gasEstimate * 15 / 10)
-				await PlasmaContract.methods.finalizeExits(itemsToPop).send({from: from, gas: gasEstimate})
+			    await PlasmaContract.methods.finalizeExits(itemsToPop).send({from: from, gas: gasEstimate})
 				setTimeout(popTheQueue, interval);
 			}
 			catch (err) {
+                console.log("Looks like the queue is empty");
 				console.log(err);
 				setTimeout(popTheQueue, interval);
 			}

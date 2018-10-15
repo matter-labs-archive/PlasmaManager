@@ -19,7 +19,7 @@ module.exports = {
 	port: env.PORT || 4000,
 	verbose: Number.parseInt(env.VERBOSE) || 0,
 	gasLimit: 1e6,
-	blockAssemblyInterval: 60 * 1000,
+	blockAssemblyInterval: Number.parseInt(env.BLOCK_TIME, 10) || 60 * 1000,
 	blockWritingInterval: 5 * 1000,
 	connectionString: env.STORAGE_CONNECTION_STRING,
 	storageBucket: env.STORAGE_BUCKET || "stage",
