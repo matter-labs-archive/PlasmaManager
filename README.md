@@ -8,7 +8,6 @@
   * [Design Decisions](#design-decisions)
   * [Requirements](#requirements)
   * [Communication](#communication)
-  * [Installation](#installation)
   * [Transaction Structure](#transaction-structure) 
     + [Input](#input)
     + [Output](#output)
@@ -60,13 +59,6 @@ If you are using PlasmaManager in your project or know of an project that uses i
 - If you **found a bug**, [open an issue](https://github.com/matterinc/PlasmaManager/issues).
 - If you **have a feature request**, [open an issue](https://github.com/matterinc/PlasmaManager/issues).
 - If you **want to contribute**, [submit a pull request](https://github.com/matterinc/PlasmaManager/pulls).
-
-## Installation
-
-```javascript
-const PlasmaManager = require('@thematter_io/PlasmaManager')
-console.log(PlasmaManager)
-```
 
 ## Transaction structure
 
