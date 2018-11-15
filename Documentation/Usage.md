@@ -21,7 +21,7 @@ const outputs = [{to: toAddress, amount: am}]
 #### Form transaction, sign it and serialize
 
 ```js
-const {createTransaction} = require("../functions/createTransaction");
+const {createTransaction} = require("../PlasmaManager/functions/createTransaction");
 
 const txType = 1; // null = 0; split = 1; merge = 2; fund = 3;
 const transaction = createTransaction(txType, inputs, outputs, fromPrivateKey);
@@ -33,7 +33,7 @@ const serializedTX = transaction.serialize()
 #### Get UTXOs list for Ethereum address
 
 ```js
-const {getUTXOlist} = require("../functions/getUTXOlist");
+const {getUTXOlist} = require("../PlasmaManager/functions/getUTXOlist");
 
 let list = await getUTXOlist(fromAddress, "127.0.0.1:3001")
 assert(list.utxos.length === 0);
@@ -43,7 +43,7 @@ assert(list.utxos.length === 0);
 
 #### Send raw transaction
 ```js
-const {sendTransaction} = require("../functions/sendTransaction");
+const {sendTransaction} = require("../PlasmaManager/functions/sendTransaction");
 const ethUtil = require("ethereumjs-util");
 
 const sendingResult = await sendTransaction(ethUtil.bufferToHex(serializedTX), "127.0.0.1:3001")
