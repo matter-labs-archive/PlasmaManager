@@ -2,6 +2,7 @@
     "browserify": true,
     "bitwise": true,
     "camelcase": true,
+    "esversion": 6,
     "eqeqeq": true,
     "freeze": true,
     "funcscope": false,
