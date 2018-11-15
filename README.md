@@ -23,15 +23,15 @@
   * [License](#license)
 
 ---
-  - [Usage Doc](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md)
+  - [Usage Doc](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md)
 	- **Transaction** 
-		- [Form input](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md#form-input)
-		- [Form output](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md#form-output)
-		- [Form transaction and sign it](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md#form-transaction-and-sign-it)
+		- [Form input](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-input)
+		- [Form output](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-output)
+		- [Form transaction and sign it](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-transaction-and-sign-it)
 	- **UTXOs listing** 
-		- [Get UTXOs list for Ethereum address](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md#get-utxos-list-for-ethereum-address)
+		- [Get UTXOs list for Ethereum address](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-utxos-list-for-ethereum-address)
 	- **Send transaction** 
-		- [Send raw transaction](https://github.com/matterinc/PlasmaManager/blob/documentation/Documentation/Usage.md#send-raw-transaction)	
+		- [Send raw transaction](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#send-raw-transaction)	
 
 ## Features
 
