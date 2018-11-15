@@ -27,10 +27,10 @@
 	- **Transaction** 
 		- [Form input](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-input)
 		- [Form output](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-output)
-		- [Form transaction and sign it](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-transaction-and-sign-it)
+		- [Form transaction, sign it and serialize](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#form-transaction-sign-it-and-serialize)
 	- **UTXOs listing** 
 		- [Get UTXOs list for Ethereum address](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-utxos-list-for-ethereum-address)
-	- **Send transaction** 
+	- **Send transaction in Plasma** 
 		- [Send raw transaction](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#send-raw-transaction)	
 
 ## Features
