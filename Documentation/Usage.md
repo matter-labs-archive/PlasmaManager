@@ -71,7 +71,7 @@ let hashFromContract = ethUtil.toBuffer(hash);
 assert(hash.equals(hashFromContract));
 ```
 
-#### Assemble and parse Block by its number
+#### Parse Block by its number
 
 ```js
 const {Block} = require("../PlasmaManager/lib/Block/RLPblock");
@@ -79,7 +79,7 @@ const {Block} = require("../PlasmaManager/lib/Block/RLPblock");
 let parsedBlock = new Block(serializedBlock);
 ```
 
-#### Get transactions list from Block and some checks for it
+#### Get transactions list from Block and add some checks for it
 
 ```js
 const assert = require("assert")
