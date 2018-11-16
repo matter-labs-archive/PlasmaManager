@@ -1,5 +1,7 @@
 # Usage
 
+<***> - input object
+
 ## Transaction
 
 #### Form input
@@ -77,10 +79,22 @@ const {Block} = require("../PlasmaManager/lib/Block/RLPblock");
 let parsedBlock = new Block(serializedBlock);
 ```
 
+#### Get transactions list from Block and some checks for it
+
+```js
+const assert = require("assert")
+const ethUtil = require('ethereumjs-util');
+
+let transcations = <parsedBlock>.transactions
+assert(parsedBlock.transactions.length === 1);
+assert(ethUtil.bufferToHex(parsedBlock.transactions[0].transaction.outputs[0].recipient) == <RecipientKnownAddress>);
+```
+
 ## Send transaction in Plasma
 
 #### Send raw serialized transaction
 ```js
+const assert = require("assert")
 const {sendTransaction} = require("../PlasmaManager/functions/sendTransaction");
 const ethUtil = require("ethereumjs-util");
 
@@ -92,6 +106,7 @@ assert(sendingResult.error === false);
 
 #### Put deposit
 ```js
+const assert = require("assert")
 const ethUtil = require('ethereumjs-util');
 const Web3 = require('web3');
 const web3 = new Web3(config.ethNodeAddress);
