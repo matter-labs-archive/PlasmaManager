@@ -39,6 +39,44 @@ let list = await getUTXOlist(<fromAddress>, "127.0.0.1:3001")
 assert(list.utxos.length === 0);
 ```
 
+## Blocks
+
+#### Get last written block and its number
+
+```js
+const {getLastWrittenBlock} = require("../PlasmaManager/functions/getLastWrittenBlock");
+
+const lastWrittenBlock = await getLastWrittenBlock("127.0.0.1:3001")
+const plasmaBlockNumber = lastWrittenBlock.blockNumber
+```
+
+#### Get block hash from storage and from Plasma Contract
+
+```js
+let storage = require('../PlasmaManager/blockstorage/digitalOceanStorage');
+const {getBlockHash} = require("../PlasmaManager/functions/getBlockHash");
+const assert = require("assert")
+const ethUtil = require('ethereumjs-util');
+const Web3 = require('web3');
+const web3 = new Web3(config.ethNodeAddress);
+web3.eth.accounts.wallet.add(ethUtil.bufferToHex(<fromPrivateKey>));
+const PlasmaContract = new web3.eth.Contract(<PlasmaContractABI>, <PlasmaContractAddress>, {from: <fromAddress>});
+
+const BlockHeaderLength = 137
+let hash = await getBlockHash(<plasmaBlockNumber>, storage, BlockHeaderLength);
+const hash = await PlasmaContract.methods.hashOfLastSubmittedBlock().call();
+let hashFromContract = ethUtil.toBuffer(hash);
+assert(hash.equals(hashFromContract));
+```
+
+#### Assemble and parse Block by its number
+
+```js
+const {Block} = require("../PlasmaManager/lib/Block/RLPblock");
+
+let parsedBlock = new Block(serializedBlock);
+```
+
 ## Send transaction in Plasma
 
 #### Send raw serialized transaction
@@ -74,8 +112,6 @@ const result = await PlasmaContract.methods.deposit().send({from: account, value
 #### Withdraw for chosen block number and serialized transaction
 
 ```js
-const {assembleBlock} = require("../PlasmaManager/functions/assembleBlock");
-const {Block} = require("../PlasmaManager/lib/Block/RLPblock");
 const assert = require("assert")
 const ethUtil = require('ethereumjs-util');
 const Web3 = require('web3');
@@ -83,18 +119,15 @@ const web3 = new Web3(config.ethNodeAddress);
 web3.eth.accounts.wallet.add(ethUtil.bufferToHex(<fromPrivateKey>));
 const PlasmaContract = new web3.eth.Contract(<PlasmaContractABI>, <PlasmaContractAddress>, {from: <fromAddress>});
 
-let assembledBlock = await assembleBlock(<blockNumber>, hash, "127.0.0.1:3001");
-await storage.storeBlock(assembledBlock);
-let parsedBlock = new Block(assembledBlock);
-
-let proof = parsedBlock.getProofForTransaction(<serializedTX>);
-assert(proof !== null);
-let binaryProof = proof.proof;
-
 const plasmaBlockNumber = <blockNumber> // uint32
 const outputNumber = 0 // uint8
 const transactionHex = <serializedTX> // bytes
 const proofHex = binaryProof // bytes
+const parsedBlock = <parsedBlock>
+
+let proof = parsedBlock.getProofForTransaction(transactionHex);
+assert(proof !== null);
+let binaryProof = proof.proof;
 
 const allAccounts = await web3.eth.getAccounts();
 const account = allAccounts[1]
