@@ -83,9 +83,9 @@ const web3 = new Web3(config.ethNodeAddress);
 web3.eth.accounts.wallet.add(ethUtil.bufferToHex(<fromPrivateKey>));
 const PlasmaContract = new web3.eth.Contract(<PlasmaContractABI>, <PlasmaContractAddress>, {from: <fromAddress>});
 
-assembledBlock = await assembleBlock(<blockNumber>, hash, "127.0.0.1:3001");
+let assembledBlock = await assembleBlock(<blockNumber>, hash, "127.0.0.1:3001");
 await storage.storeBlock(assembledBlock);
-parsedBlock = new Block(assembledBlock);
+let parsedBlock = new Block(assembledBlock);
 
 let proof = parsedBlock.getProofForTransaction(<serializedTX>);
 assert(proof !== null);
