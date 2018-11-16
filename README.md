@@ -31,6 +31,16 @@
 		- [Get UTXOs list for Ethereum address](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-utxos-list-for-ethereum-address)
 	- **Send transaction in Plasma** 
 		- [Send raw transaction](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#send-raw-transaction)	
+    - **Blocks**  
+        - [Get last written Block and its number](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-last-written-block-and-its-number)
+        - [Get block hash from storage and from Plasma Contract](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-block-hash-from-storage-and-from-plasma-contract)
+        - [Parse Block by its number](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#parse-block-by-its-number)
+        - [Get transactions list from Block and add some checks for it](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#get-transactions-list-from-block-and-add-some-checks-for-it)
+     - **Send transaction in Plasma**
+        - [Send raw serialized transaction](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#send-raw-serialized-transaction)
+     - **Send transaction to Plasma Contract**
+        - [Put deposit](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#put-deposit)
+        - [Withdraw for chosen block number and serialized transaction](https://github.com/matterinc/PlasmaManager/blob/master/Documentation/Usage.md#withdraw-for-chosen-block-number-and-serialized-transaction)
 
 ## Features
 
