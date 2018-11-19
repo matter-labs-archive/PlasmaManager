@@ -2,7 +2,7 @@
 
 <***> - input object
 
-Plasma is working on Mainnet and Rinkeby testnet. In some methods use *bool flag to set network* you want to use. 
+Plasma is working on Mainnet and Rinkeby testnet.
 
 ## UTXO
 
