@@ -2,6 +2,26 @@
 
 <***> - input object
 
+Plasma is working on Mainnet and Rinkeby testnet. In some methods use *bool flag to set network* you want to use. 
+
+## UTXO
+
+#### UTXO structure
+
+- blockNumber: Int
+- transactionNumber: Int
+- outputNumber: Int
+- value: String
+
+#### Get UTXOs list for Ethereum address
+
+```js
+const {getUTXOlist} = require("../PlasmaManager/functions/getUTXOlist");
+
+let list = await getUTXOlist(<fromAddress>, "127.0.0.1:3001")
+assert(list.utxos.length === 0);
+```
+
 ## Transaction
 
 #### Form input
@@ -22,23 +42,54 @@ const outputs = [{to: <toAddress>, amount: am}]
 
 #### Form transaction, sign it and serialize
 
+*Transaction types:*
+- split - use to send funds
+- merge - use to merge UTXOs
+- fund
+- null
+
+*When sending funds:*
+- 2 outputs:
+    ```js
+        let allOutputs = [];
+        const output1 = {outputNumberInTx: 0, to: <destination address>, amount: <sending amount>}
+        const output2 = {outputNumberInTx: 1, to: <current address>, amount: <stay amount>}
+        allOutputs.push(out);
+    ```
+- 1 input:
+    - form inputs array from 1 UTXO using toTransactionInput():
+    ```js
+        let allInputs = [];
+        const input = {blockNumber: <utxo>.blockNumber, txNumberInBlock: <utxo>.transactionNumber, outputNumberInTransaction: <utxo>.outputNumber, amount: <utxo>.value};
+        allInputs.push(input);
+    ```
+    
+*When merging UTXOs:*
+- 2 inputs:
+    - form input array from 2 UTXOs:
+    ```js
+        let allInputs = [];
+    	let mergedAmount = new BN();
+        for (const utxo of <utxos>) {
+          mergedAmount.iadd(new BN(utxo.value));
+          const input = {blockNumber: utxo.blockNumber, txNumberInBlock: utxo.transactionNumber, outputNumberInTransaction: utxo.outputNumber, amount: utxo.value};
+          allInputs.push(input);
+        }
+    ```
+- 1 output:
+    ```js
+        let allOutputs = [];
+        const output = [{to: <address>, amount: mergedAmount}]
+        allOutputs.push(out);
+    ```
+
+*Example:*
 ```js
 const {createTransaction} = require("../PlasmaManager/functions/createTransaction");
 
 const txType = 1; // null = 0; split = 1; merge = 2; fund = 3;
 const transaction = createTransaction(txType, <inputs>, <outputs>, <fromPrivateKey>);
 const serializedTX = transaction.serialize()
-```
-
-## UTXOs listing
-
-#### Get UTXOs list for Ethereum address
-
-```js
-const {getUTXOlist} = require("../PlasmaManager/functions/getUTXOlist");
-
-let list = await getUTXOlist(<fromAddress>, "127.0.0.1:3001")
-assert(list.utxos.length === 0);
 ```
 
 ## Blocks
@@ -103,6 +154,15 @@ assert(sendingResult.error === false);
 ```
 
 ## Send transaction to Plasma Contract
+
+There are 3 preset Plasma Contract methods you can use in this lib:
+- deposit
+- WithdrawCollateral
+- startExit
+
+`WithdrawCollateral` and `startExit` are used in one action - withdraw funds from Plasma UTXO/
+
+You can also use any other Plasma Contract method by learning its ABI.
 
 #### Put deposit
 ```js
