@@ -17,7 +17,9 @@ rules:
     - unix
   quotes:
     - error
-    - double
+    - single
   semi:
     - error
     - never
+  no-extra-semi: 
+    - error
