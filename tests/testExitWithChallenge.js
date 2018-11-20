@@ -1,9 +1,9 @@
 const config = require('../config');
 var storage;
 if (config.debug) {
-	storage = require('../blockstorage/localBlockStorage');
+    storage = require('../blockstorage/localBlockStorage');
 } else {
-	storage = require('../blockstorage/digitalOceanStorage');
+    storage = require('../blockstorage/digitalOceanStorage');
 }
 const {addresses, keys} = require("../testScripts/keys");
 
@@ -185,7 +185,7 @@ async function main() {
 
     // now spend in Plasma
  
-   // spend from block number 2
+    // spend from block number 2
     inputs = [{blockNumber: 2, txNumberInBlock: 0, outputNumberInTransaction: 0, 
         amount: am // 1 ETH
     }];

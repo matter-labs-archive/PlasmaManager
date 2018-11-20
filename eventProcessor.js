@@ -10,7 +10,7 @@ async function startEventProcessing() {
     // const redisClient = redis.createClient(config.redis);
     const mq = await initMQ(config.redis, eventNames)
     // start loop to pop events from queue
-	setTimeout(processEvents, 1000);
+    setTimeout(processEvents, 1000);
     
     async function processEvents() {
         // console.log("Processing events")

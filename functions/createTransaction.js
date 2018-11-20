@@ -1,7 +1,7 @@
 const {PlasmaTransaction,
-TxTypeFund, 
-TxTypeMerge, 
-TxTypeSplit} = require("../lib/Tx/RLPtx.js");
+    TxTypeFund, 
+    TxTypeMerge, 
+    TxTypeSplit} = require("../lib/Tx/RLPtx.js");
 
 const {PlasmaTransactionWithSignature} = require("../lib/Tx/RLPtxWithSignature");
 

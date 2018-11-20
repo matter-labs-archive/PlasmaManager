@@ -1,9 +1,9 @@
 const config = require('../config');
 var storage;
 if (config.debug) {
-	storage = require('../blockstorage/localBlockStorage');
+    storage = require('../blockstorage/localBlockStorage');
 } else {
-	storage = require('../blockstorage/digitalOceanStorage');
+    storage = require('../blockstorage/digitalOceanStorage');
 }
 const {addresses, keys} = require("../testScripts/keys");
 const alice = keys[1];

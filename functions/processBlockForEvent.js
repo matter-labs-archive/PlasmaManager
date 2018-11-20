@@ -7,17 +7,17 @@ async function processBlockForEvent(blockNumber, eventName, PlasmaContract, mq) 
         return 0
     }
     const allEventsJSON = allEvents
-    .map((ev) => {
-        return ev.returnValues;
-    })
-    .map((ev) => {
-        for (const key of Object.keys(ev)) {
-            if (typeof ev[key].toNumber === 'function') {
-                ev[key] = toString(10);
+        .map((ev) => {
+            return ev.returnValues;
+        })
+        .map((ev) => {
+            for (const key of Object.keys(ev)) {
+                if (typeof ev[key].toNumber === 'function') {
+                    ev[key] = toString(10);
+                }
             }
-        }
-        return ev;
-    })
+            return ev;
+        })
     if (allEventsJSON.length === 0) {
         return 0
     }

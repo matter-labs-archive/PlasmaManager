@@ -114,22 +114,22 @@ async function processToSend(message, plasmaContract, storage, web3) {
                     data: abiData,
                     nonce: nonce
                 }).on("transactionHash", (hash) => {
-                        const now = Math.floor((new Date()).getTime() / 1000);
-                        const copy = message;
-                        const transactionParameters = {
-                            account: account,
-                            nonce: nonce,
-                            gasPrice: newGasPrice.toString(10),
-                            gas: gas,
-                            contractAddress: contractAddress,
-                            abiData: abiData
-                        }
-                        copy.hash = hash;
-                        copy.timestamp = now;
-                        copy.previousTransactionParameters = transactionParameters;
-                        resolve(copy);
-                        return
-                    })
+                    const now = Math.floor((new Date()).getTime() / 1000);
+                    const copy = message;
+                    const transactionParameters = {
+                        account: account,
+                        nonce: nonce,
+                        gasPrice: newGasPrice.toString(10),
+                        gas: gas,
+                        contractAddress: contractAddress,
+                        abiData: abiData
+                    }
+                    copy.hash = hash;
+                    copy.timestamp = now;
+                    copy.previousTransactionParameters = transactionParameters;
+                    resolve(copy);
+                    return
+                })
                     .on("error", (error) => {
                         console.log("Error sending a challenge")
                         console.log(error)
@@ -185,22 +185,22 @@ async function processToSend(message, plasmaContract, storage, web3) {
                     data: abiData,
                     nonce: nonce
                 }).on("transactionHash", (hash) => {
-                        const now = Math.floor((new Date()).getTime() / 1000);
-                        const copy = message;
-                        const transactionParameters = {
-                            account: account,
-                            nonce: nonce,
-                            gasPrice: gasPrice.toString(10),
-                            gas: gas,
-                            contractAddress: contractAddress,
-                            abiData: abiData
-                        }
-                        copy.hash = hash;
-                        copy.timestamp = now;
-                        copy.previousTransactionParameters = transactionParameters;
-                        resolve(copy)
-                        return
-                    })
+                    const now = Math.floor((new Date()).getTime() / 1000);
+                    const copy = message;
+                    const transactionParameters = {
+                        account: account,
+                        nonce: nonce,
+                        gasPrice: gasPrice.toString(10),
+                        gas: gas,
+                        contractAddress: contractAddress,
+                        abiData: abiData
+                    }
+                    copy.hash = hash;
+                    copy.timestamp = now;
+                    copy.previousTransactionParameters = transactionParameters;
+                    resolve(copy)
+                    return
+                })
                     .on("error", (error) => {
                         console.log("Error sending a challenge")
                         console.log(error)

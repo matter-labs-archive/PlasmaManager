@@ -1,9 +1,9 @@
 const config = require('./config');
 let storage;
 if (config.debug) {
-	storage = require('./blockstorage/localBlockStorage');
+    storage = require('./blockstorage/localBlockStorage');
 } else {
-	storage = require('./blockstorage/digitalOceanStorage');
+    storage = require('./blockstorage/digitalOceanStorage');
 }
 
 const Web3 = require('web3');
@@ -26,7 +26,7 @@ async function startChallengeProcessing() {
     const PlasmaContract = new web3.eth.Contract(contractDetails.abi, contractDetails.address);
 
     // start loop to pop events from queue
-	setTimeout(processChallenges, 1000);
+    setTimeout(processChallenges, 1000);
     
     async function processChallenges() {
         await processExitChallengeFromQueue("ExitStartedEvent", mq, PlasmaContract, storage, web3)

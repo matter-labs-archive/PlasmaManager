@@ -5,7 +5,7 @@ function getBlockDirectory() {
     if (config.localStorageDirName === null ||
         config.localStorageDirName === undefined || 
         config.localStorageDirName === "") {
-            return __dirname + "/blocks/"
+        return __dirname + "/blocks/"
     }
     return config.localStorageDirName
 }
@@ -24,20 +24,20 @@ async function getManifest() {
     if (config.localStorageDirName !== null &&
         config.localStorageDirName !== undefined && 
         config.localStorageDirName !== "") {
-            // console.log("Reading from local folder")
-            let max = 0
-            fs.readdirSync(config.localStorageDirName).forEach(file => {
-                try {
-                    const blockNumber = Number.parseInt(file)
-                    if (blockNumber > max) {
-                        max = blockNumber
-                    }
-                } catch(error) {
-                    console.log(error)
-                    console.log(file)
+        // console.log("Reading from local folder")
+        let max = 0
+        fs.readdirSync(config.localStorageDirName).forEach(file => {
+            try {
+                const blockNumber = Number.parseInt(file)
+                if (blockNumber > max) {
+                    max = blockNumber
                 }
-            })
-            return {lastBlock: max}
+            } catch(error) {
+                console.log(error)
+                console.log(file)
+            }
+        })
+        return {lastBlock: max}
     }
     let manifest = {lastBlock: lastBlock};
     return manifest;
@@ -57,15 +57,15 @@ async function storeBlock(block) {
 }
 
 module.exports = {
-	getLastUploadedBlockNumber: async function() {
-		let manifest = await getManifest();
-		return manifest.lastBlock;
-	},
-	getBlock: async function(blockNumber) {
+    getLastUploadedBlockNumber: async function() {
+        let manifest = await getManifest();
+        return manifest.lastBlock;
+    },
+    getBlock: async function(blockNumber) {
         let bl = await getBlock(blockNumber)
         return bl
-	},
-	storeBlock: async function (blockData) {
+    },
+    storeBlock: async function (blockData) {
         await storeBlock(blockData)
-	},
+    },
 };

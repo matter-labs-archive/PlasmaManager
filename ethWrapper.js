@@ -1,9 +1,9 @@
 const config = require('./config');
 var storage;
 if (config.debug) {
-	storage = require('./blockstorage/localBlockStorage');
+    storage = require('./blockstorage/localBlockStorage');
 } else {
-	storage = require('./blockstorage/digitalOceanStorage');
+    storage = require('./blockstorage/digitalOceanStorage');
 }
 const ethUtil = require("ethereumjs-util");
 const Web3 = require("web3");
@@ -97,7 +97,7 @@ function main() {
                 .estimateGas({from: acc, value: collateral})
             gas = Math.floor(gas * 1.5)
             const submissionReceipt = await PlasmaContract.methods.startDepositWithdraw(depositIndex.toString(10)).
-            send({from: acc, value: collateral, gas: gas})
+                send({from: acc, value: collateral, gas: gas})
             return res.json({error: false, receipt: submissionReceipt})
         }
         catch(error) {

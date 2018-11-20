@@ -15,9 +15,5 @@ rules:
   linebreak-style:
     - error
     - unix
-  quotes:
-    - error
-  semi:
-    - error
   no-extra-semi: 
     - error

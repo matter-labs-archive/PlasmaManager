@@ -5,10 +5,10 @@ async function getUTXOlist(address, listerEndpoint) {
         method: 'POST',
         uri: `http://${listerEndpoint}/listUTXOs`,
         body: {for: address,
-                blockNumber: 1,
-                transactionNumber: 0,
-                outputNumber: 0
-            },
+            blockNumber: 1,
+            transactionNumber: 0,
+            outputNumber: 0
+        },
         json: true 
     };
     const result = await rp(options);
