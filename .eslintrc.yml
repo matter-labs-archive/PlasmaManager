@@ -19,6 +19,5 @@ rules:
     - error
   semi:
     - error
-    - never
   no-extra-semi: 
     - error
