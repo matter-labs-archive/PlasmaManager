@@ -6,12 +6,9 @@ if (config.debug) {
     storage = require('../blockstorage/digitalOceanStorage');
 }
 const {addresses, keys} = require("../testScripts/keys");
-
-const operator = keys[0];
 const operatorAddress = addresses[0];
 const alice = keys[1];
 const aliceAddress = addresses[1];
-const bob = keys[2];
 const bobAddress = addresses[2];
 
 const {initMQ} = require('../functions/initMQ');
@@ -129,7 +126,7 @@ async function main() {
     assert(hash.equals(hashFromContract));
 
     const am = "1000000000000000000"
-    const inputs = [{blockNumber: 1, txNumberInBlock: 0, outputNumberInTransaction: 0, 
+    const inputs = [{blockNumber: 1, txNumberInBlock: 0, outputNumberInTransaction: 0,
         amount: am // 1 ETH
     }];
     const outputs = [{to: bobAddress, amount: am}]
