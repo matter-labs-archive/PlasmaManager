@@ -1,3 +1,19 @@
 {
-    
+    "asi" : true,
+    "browserify": true,
+    "bitwise": true,
+    "camelcase": true,
+    "esversion": 6,
+    "eqeqeq": true,
+    "freeze": true,
+    "funcscope": false,
+    "maxcomplexity": 5,
+    "maxdepth": 3,
+    "maxerr": 50,
+    "nonew": true,
+    "unused": true,
+    "undef": true,
+    "predef": [
+        "console"
+    ]
 }
